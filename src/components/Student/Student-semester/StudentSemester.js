@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import './Student-semester.css'
 import Button from "@mui/material/Button";
@@ -16,9 +16,28 @@ import SchoolIcon from '@mui/icons-material/School';
 import LaptopIcon from '@mui/icons-material/Laptop';
 
 export default function StudentSemester() {
+
+
+  const [semester, setSemester] = useState({name: "todo"});
+
   let { semesterID } = useParams();
-  const semester = allSemesters.find((semester) => semester.id === Number(semesterID));
-  console.log(semester);
+
+  useEffect(() => {
+
+    const accessToken = localStorage.getItem("accessToken")
+
+    const response = fetch("http://localhost:9090/term/" + semesterID, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization" : "Bearer " + accessToken
+      },
+    }).then(response => response.json()).then(response => {
+      setSemester(response.term)
+    })
+
+  }, [semesterID])
+
   const [openDialog, setOpenDialog] = useState(false);
 
   const handleOpenDialog = () => {
@@ -28,6 +47,7 @@ export default function StudentSemester() {
   const handleCloseDialog = () => {
     setOpenDialog(false);
   };
+
 
   return (
     <div className="semester student-semester">
@@ -48,7 +68,7 @@ export default function StudentSemester() {
       </div>
       <hr />
 
-      <div className="cards" >  
+      <div className="cards">  
        <Link to={'ProCoursePreReg'}>  <Card className="studentSemesterCard"> <LibraryBooksIcon className="semesterIcon"></LibraryBooksIcon> The Provided Courses for <br/> pre-registration </Card></Link>
        <Link to={'PreRegs'}>  <Card className="studentSemesterCard"> <LocalLibraryIcon className="semesterIcon"></LocalLibraryIcon> The pre-Registrations  </Card></Link>
        <Link to={'ProCourseReg'} >  <Card className="studentSemesterCard"> <SchoolIcon className="semesterIcon"></SchoolIcon> The Provided Courses for <br/> Registration </Card></Link>

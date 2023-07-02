@@ -15,9 +15,6 @@ export default function IT() {
 
   useEffect(() => {
 
-
-    
-    
     const fetchTerms = async () => {
       try {
         const accessToken = localStorage.getItem("accessToken");
@@ -40,8 +37,6 @@ export default function IT() {
      
     
     
-  
-   
   }, []);
 
   const location = useLocation();

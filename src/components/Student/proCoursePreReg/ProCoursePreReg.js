@@ -8,10 +8,14 @@ import { Button } from "@mui/material";
 
 
 export default function ProCoursePreReg() {
+
   let { semesterID } = useParams();
+    
+
   const semester = allSemesters.find(
     (semester) => semester.id === Number(semesterID)
   );
+
   const [searchQuery, setSearchQuery] = useState("");
   const [showAll, setShowAll] = useState(false);
 

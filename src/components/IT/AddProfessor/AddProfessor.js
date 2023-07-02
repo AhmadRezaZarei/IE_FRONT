@@ -67,18 +67,43 @@ export default function AddProfessor() {
     };
   
     const handleSubmit = (event) => {
-      event.preventDefault();
-      console.log("Form submitted");
-      console.log("First Name:", firstName);
-      console.log("Last Name:", lastName);
-      console.log("Student Number:", studentNumber);
-      console.log("ID Number:", idNumber);
-      console.log("Passed Courses:", passedCourses);
-      console.log("Faculty:", faculty);
-      console.log("Major:", major);
-      console.log("Year of Entry:", yearOfEntry.getFullYear().toString());
-      console.log("Level Of education:", levelOfEducation);
-      // Additional logic for form submission
+      
+       event.preventDefault();
+      // console.log("Form submitted");
+      // console.log("First Name:", firstName);
+      // console.log("Last Name:", lastName);
+      // console.log("Student Number:", studentNumber);
+      // console.log("ID Number:", idNumber);
+      // console.log("Passed Courses:", passedCourses);
+      // console.log("Faculty:", faculty);
+      // console.log("Major:", major);
+      // console.log("Year of Entry:", yearOfEntry.getFullYear().toString());
+      // console.log("Level Of education:", levelOfEducation);
+      // // Additional logic for form submission
+
+      const accessToken = localStorage.getItem("accessToken")
+
+      const response = fetch("http://localhost:9090/admin/professor", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization" : "Bearer " + accessToken
+        },
+        body: JSON.stringify({
+
+          firstName: firstName,
+          lastName: lastName,
+          email: "email",
+          password: "password",
+          rank: levelOfEducation,
+          phone: "phone",
+          faculty: faculty,
+          fieldOfStudy: "fieldOfStudy"
+      })
+      }).then(response => response.json()).then(response => {
+        console.log("professor added")
+      })
+
     };
     return (
       <div style={{ height: "80%" }} className="semester">

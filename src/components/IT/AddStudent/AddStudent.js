@@ -22,14 +22,14 @@ const majors = [
 export default function AddStudent() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [studentNumber, setStudentNumber] = useState("");
-  const [idNumber, setIdNumber] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
   const [passedCourses, setPassedCourses] = useState("");
   const [faculty, setFaculty] = useState("");
   const [major, setMajor] = useState("");
   const [yearOfEntry, setYearOfEntry] = useState(new Date());
 
-  const [teacherAssistant, setTeacherAssistant] = useState("");
+  const [phone, setPhone] = useState("");
   const handleFirstNameChange = (event) => {
     setFirstName(event.target.value);
   };
@@ -38,12 +38,12 @@ export default function AddStudent() {
     setLastName(event.target.value);
   };
 
-  const handleStudentNumberChange = (event) => {
-    setStudentNumber(event.target.value);
+  const handleStudentPasswordChange = (event) => {
+    setPassword(event.target.value);
   };
 
-  const handleIdNumberChange = (event) => {
-    setIdNumber(event.target.value);
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
   };
 
   const handlePassedCoursesChange = (event) => {
@@ -60,8 +60,8 @@ export default function AddStudent() {
 
 
 
-  const handleTeacherAssistantChange = (event) => {
-    setTeacherAssistant(event.target.value);
+  const handlePhoneChange = (event) => {
+    setPhone(event.target.value);
   };
   const handleAddCourse = () => {
     // Logic to add a passed course
@@ -70,18 +70,47 @@ export default function AddStudent() {
   };
 
   const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log("Form submitted");
-    console.log("First Name:", firstName);
-    console.log("Last Name:", lastName);
-    console.log("Student Number:", studentNumber);
-    console.log("ID Number:", idNumber);
-    console.log("Passed Courses:", passedCourses);
-    console.log("Faculty:", faculty);
-    console.log("Major:", major);
-    console.log("Year of Entry:", yearOfEntry.getFullYear().toString());
-    console.log("Teacher Assistant:", teacherAssistant);
-    // Additional logic for form submission
+     event.preventDefault();
+    // console.log("Form submitted");
+    // console.log("First Name:", firstName); // check 
+    // console.log("Last Name:", lastName); // check 
+    // console.log("Student Number:", studentNumber);
+    // console.log("ID Number:", idNumber);
+    // console.log("Passed Courses:", passedCourses);
+    // console.log("Faculty:", faculty);
+    // console.log("Major:", major);
+    // console.log("Year of Entry:", yearOfEntry.getFullYear().toString());
+    // console.log("Teacher Assistant:", teacherAssistant);
+    // // Additional logic for form submission
+
+
+
+    // console.log("api called")
+    // call the api
+
+    const accessToken = localStorage.getItem("accessToken")
+
+    const response = fetch("http://localhost:9090/admin/student", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization" : "Bearer " + accessToken
+      },
+      body: JSON.stringify({
+        "firstName": firstName,
+        "lastName": lastName,
+        "password": password,
+        "email": email,
+        "phone": phone,
+        "faculty": faculty,
+        "fieldOfStudy": major,
+    })
+    }).then(response => response.json()).then(response => {
+      console.log("studnet added")
+    })
+
+
+
   };
   return (
     <div style={{ height: "80%" }} className="semester">
@@ -138,49 +167,32 @@ export default function AddStudent() {
             ))}
           </TextField>
           <TextField
-            label="Student Number"
-            value={studentNumber}
-            onChange={handleStudentNumberChange}
-            fullWidth
-            margin="normal"
-            variant="outlined"
-          />
-           <DatePicker className="datepickerAdd" label='Entry Year' views={["year"]} value={yearOfEntry}  onChange={(newValue) => setYearOfEntry(newValue)}/>
-       
-
-          <TextField
-            label="ID Number"
-            value={idNumber}
-            onChange={handleIdNumberChange}
+            label="password"
+            value={password}
+            onChange={handleStudentPasswordChange}
             fullWidth
             margin="normal"
             variant="outlined"
           />
 
+
           <TextField
-            label="Teacher Assistant"
-            value={teacherAssistant}
-            onChange={handleTeacherAssistantChange}
+            label="email"
+            value={email}
+            onChange={handleEmailChange}
             fullWidth
             margin="normal"
             variant="outlined"
           />
+
           <TextField
-            className="textFiled"
-            label="Passed Courses"
-            value={passedCourses}
-            onChange={handlePassedCoursesChange}
+            label="Phone"
+            value={phone}
+            onChange={handlePhoneChange}
             fullWidth
             margin="normal"
             variant="outlined"
-            InputProps={{
-                endAdornment: (
-                  <Button variant="outlined" onClick={handleAddCourse}>
-                    Add Course
-                  </Button>
-                ),
-              }}
-            />
+          />
           <Button className="addCourseBtn" variant="contained" type="submit">
             Submit
           </Button>

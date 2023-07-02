@@ -18,14 +18,14 @@ const faculties = [
 export default function AddPresident() {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
-    const [studentNumber, setStudentNumber] = useState("");
-    const [idNumber, setIdNumber] = useState("");
+    const [password, setPassword] = useState("");
+    const [email, setEmail] = useState("");
     const [passedCourses, setPassedCourses] = useState("");
     const [faculty, setFaculty] = useState("");
     const [major, setMajor] = useState("");
     const [yearOfEntry, setYearOfEntry] = useState(new Date());
   
-    const [levelOfEducation, setLevelOfEducation] = useState("");
+    const [phone, setPhone] = useState("");
     const handleFirstNameChange = (event) => {
       setFirstName(event.target.value);
     };
@@ -34,12 +34,12 @@ export default function AddPresident() {
       setLastName(event.target.value);
     };
   
-    const handleStudentNumberChange = (event) => {
-      setStudentNumber(event.target.value);
+    const handlePasswordChange = (event) => {
+      setPassword(event.target.value);
     };
   
-    const handleIdNumberChange = (event) => {
-      setIdNumber(event.target.value);
+    const handleEmailChange = (event) => {
+      setEmail(event.target.value);
     };
   
     const handlePassedCoursesChange = (event) => {
@@ -56,8 +56,8 @@ export default function AddPresident() {
   
   
   
-    const handleLevelOfEducationChange = (event) => {
-      setLevelOfEducation(event.target.value);
+    const handlePhoneChange = (event) => {
+      setPhone(event.target.value);
     };
     const handleAddCourse = () => {
       // Logic to add a passed course
@@ -67,17 +67,40 @@ export default function AddPresident() {
   
     const handleSubmit = (event) => {
       event.preventDefault();
-      console.log("Form submitted");
-      console.log("First Name:", firstName);
-      console.log("Last Name:", lastName);
-      console.log("Student Number:", studentNumber);
-      console.log("ID Number:", idNumber);
-      console.log("Passed Courses:", passedCourses);
-      console.log("Faculty:", faculty);
-      console.log("Major:", major);
-      console.log("Year of Entry:", yearOfEntry.getFullYear().toString());
-      console.log("Level Of education:", levelOfEducation);
+
+      // console.log("Form submitted");
+      // console.log("First Name:", firstName); // 
+      // console.log("Last Name:", lastName);// 
+      // console.log("Student Number:", studentNumber);
+      // console.log("ID Number:", idNumber);
+      // console.log("Passed Courses:", passedCourses);
+      // console.log("Faculty:", faculty);
+      // console.log("Major:", major);
+      // console.log("Year of Entry:", yearOfEntry.getFullYear().toString());
+      // console.log("Level Of education:", levelOfEducation);
       // Additional logic for form submission
+
+      const accessToken = localStorage.getItem("accessToken")
+
+      const response = fetch("http://localhost:9090/admin/manager", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization" : "Bearer " + accessToken
+        },
+        body: JSON.stringify({
+          "firstName": firstName,
+          "lastName": lastName,
+          "password": password,
+          "email": email,
+          "phone": phone,
+          "faculty": faculty,
+      })
+      }).then(response => response.json()).then(response => {
+        console.log("manager added")
+      })
+  
+
     };
     return (
       <div style={{ height: "80%" }} className="semester">
@@ -119,44 +142,28 @@ export default function AddPresident() {
               variant="outlined"
             />
             <TextField
-              select
-              label="Major"
-              value={major}
-              onChange={handleMajorChange}
-              fullWidth
-              margin="normal"
-              variant="outlined"
-            >
-              {majors.map((major) => (
-                <MenuItem key={major.value} value={major.value}>
-                  {major.label}
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              label="Student Number"
-              value={studentNumber}
-              onChange={handleStudentNumberChange}
+              label="Passowrd"
+              value={password}
+              onChange={handlePasswordChange}
               fullWidth
               margin="normal"
               variant="outlined"
             />
-             <DatePicker className="datepickerAdd" label='Entry Year' views={["year"]} value={yearOfEntry}  onChange={(newValue) => setYearOfEntry(newValue)}/>
-         
-  
+
+           
             <TextField
-              label="ID Number"
-              value={idNumber}
-              onChange={handleIdNumberChange}
+              label="Email"
+              value={email}
+              onChange={handleEmailChange}
               fullWidth
               margin="normal"
               variant="outlined"
             />
   
             <TextField
-              label="Level of Education"
-              value={levelOfEducation}
-              onChange={handleLevelOfEducationChange}
+              label="Phone"
+              value={phone}
+              onChange={handlePhoneChange}
               fullWidth
               margin="normal"
               variant="outlined"

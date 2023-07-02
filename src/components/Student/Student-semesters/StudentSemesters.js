@@ -14,6 +14,7 @@ export default function StudentSemesters() {
   const { mode } = useSelector((state) => state.darkMode);
 
   useEffect(() => {
+    
     const fetchTerms = async () => {
       console.log("fetch term called")
       try {
