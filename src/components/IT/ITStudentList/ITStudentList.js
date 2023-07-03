@@ -10,11 +10,12 @@ export default function ITStudentList() {
   
   const [showAll, setShowAll] = useState(false);
 
-  const [students, setStudents] = useState([]);
   
   const [searchQuery, setSearchQuery] = useState("");
 
 
+  const [students, setStudents] = useState([]);
+  
   useEffect(() => {
 
     const accessToken = localStorage.getItem("accessToken")

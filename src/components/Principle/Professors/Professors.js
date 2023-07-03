@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import allSemesters from "../../../mockdata";
 import './Professors.css';
@@ -25,17 +25,37 @@ export default function Professors() {
     { id: 15, name: "Professor O" },
   ];
 
-  const [professors, setProfessors] = useState(mockProfessors.slice(0, 10));
+
+  const [professors, setProfessors] = useState([]);
+
+  useEffect(() => {
+    
+    // fetch professors 
+    const accessToken = localStorage.getItem("accessToken")
+
+    const response = fetch("http://localhost:9090/admin/professors", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization" : "Bearer " + accessToken
+      },
+    }).then(response => response.json()).then(response => {
+      setProfessors(response.professors)
+    })
+
+
+  }, [])
+
   const [showAll, setShowAll] = useState(false);
 
   const handleShowMore = () => {
     setShowAll(true);
-    setProfessors(mockProfessors);
+ //   setProfessors(mockProfessors);
   };
 
   const handleShowLess = () => {
     setShowAll(false);
-    setProfessors(mockProfessors.slice(0, 10));
+  //  setProfessors(mockProfessors.slice(0, 10));
   };
 
   return (
@@ -51,38 +71,19 @@ export default function Professors() {
           {professors.map((professor) => (
             <Card className="card">
               <li
-                key={professor.id}
+                key={professor.idNumber}
                 style={{
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
                 }}
               >
-                <p>{professor.name}</p>
+                <p>{professor.firstName + " " + professor.lastName}</p>
               </li>
             </Card>
           ))}
         </ul>
         <div className="btn-container">
-          {professors.length > 10 ? (
-            !showAll ? (
-              <Button
-                className="showMore btn"
-                variant="contained"
-                onClick={handleShowMore}
-              >
-                More
-              </Button>
-            ) : (
-              <Button
-                className="btn"
-                variant="contained"
-                onClick={handleShowLess}
-              >
-                Less
-              </Button>
-            )
-          ) : null}
         </div>
       </div>
     </div>

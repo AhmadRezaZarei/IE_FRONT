@@ -34,6 +34,29 @@ export default function AddSemester() {
     console.log("Start Date:", startDate);
     console.log("End Date:", endDate);
     // Additional logic for form submission
+
+    // call the api 
+
+
+
+    const accessToken = localStorage.getItem("accessToken")
+
+    const response = fetch("http://localhost:9090/term", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization" : "Bearer " + accessToken
+      },
+      body: JSON.stringify({
+        "name": name,
+        "isEnded": false
+    })
+    }).then(response => response.json()).then(response => {
+      console.log("studnet added")
+    })
+
+
+
   };
 
   return (

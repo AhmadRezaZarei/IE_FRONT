@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import allSemesters from "../../../mockdata";
 
@@ -10,11 +10,44 @@ import { Button } from "@mui/material";
 export default function ProCoursePreReg() {
 
   let { semesterID } = useParams();
-    
+  const [semester, setSemester] = useState({name: "todo"})
+  const [currentCourses, setCurrentCourses] = useState([])
 
-  const semester = allSemesters.find(
-    (semester) => semester.id === Number(semesterID)
-  );
+  useEffect(() => {
+
+    const accessToken = localStorage.getItem("accessToken")
+
+    const response = fetch("http://localhost:9090/term/" + semesterID, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization" : "Bearer " + accessToken
+      },
+    }).then(response => response.json()).then(response => {
+      setSemester(response.term)
+    })
+
+  }, [semesterID])
+
+
+  useEffect(() => {
+
+    const accessToken = localStorage.getItem("accessToken")
+
+    const response = fetch("http://localhost:9090/term/" + semesterID + "/preregistration_courses", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization" : "Bearer " + accessToken
+      },
+    }).then(response => response.json()).then(response => {
+      console.log("fetched courses")
+      setCurrentCourses(response.registrationCourses)
+    }).catch(err => {
+      console.log(err, "error")
+    })
+  }, [semesterID])
+
 
   const [searchQuery, setSearchQuery] = useState("");
   const [showAll, setShowAll] = useState(false);
@@ -23,7 +56,7 @@ export default function ProCoursePreReg() {
     setSearchQuery(event.target.value);
   };
 
-  let filteredCourses = semester ? semester.courses : [];
+  let filteredCourses = currentCourses;
   if (searchQuery) {
     filteredCourses = filteredCourses.filter((course) =>
       course.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -34,9 +67,16 @@ export default function ProCoursePreReg() {
     setShowAll((prevShowAll) => !prevShowAll);
   };
 
-  const displayedCourses = showAll
-    ? filteredCourses
-    : filteredCourses.slice(0, 6);
+
+  const registerCourse = (index) => {
+    
+    const course = currentCourses[index]
+    
+    // call the register api
+
+    
+
+  }
 
   return (
     <div className="semester">
@@ -55,7 +95,7 @@ export default function ProCoursePreReg() {
           />
         </div>
         <ul className="list">
-          {displayedCourses.map((course, index) => (
+          {currentCourses.map((course, index) => (
             <Card className="card">
               <li>
                 
@@ -64,7 +104,9 @@ export default function ProCoursePreReg() {
                   {course.name}
                   <span>
                     
-                    <Button variant="contained"> Pre-Registrate </Button>
+                    <Button variant="contained" onClick={() => {
+                      registerCourse(index)
+                    }}> Pre-Registrate </Button>
                     <Button variant="outlined"> Information </Button>
                   </span>
                 </p>

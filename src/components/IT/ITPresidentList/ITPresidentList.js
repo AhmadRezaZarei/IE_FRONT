@@ -113,6 +113,7 @@ export default function ITPresidentList() {
               </li>
             </Card>
           ))}
+          
         </ul>
       </div>
     </div>

@@ -88,6 +88,7 @@ export default function AddStudent() {
     // console.log("api called")
     // call the api
 
+    
     const accessToken = localStorage.getItem("accessToken")
 
     const response = fetch("http://localhost:9090/admin/student", {

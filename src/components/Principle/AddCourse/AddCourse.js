@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
@@ -12,9 +12,10 @@ import allSemesters from "../../../mockdata";
 
 export default function AddCourse() {
   let { semesterID } = useParams();
-  const semester = allSemesters.find(
-    (semester) => semester.id === Number(semesterID)
-  );
+  const [semester, setSemester] = useState({name: "todo"})
+
+
+
 
   const [name, setName] = useState("");
   const [professorName, setProfessorName] = useState("");
@@ -50,6 +51,38 @@ export default function AddCourse() {
     console.log("Class Date and Time:", classDateTime);
     console.log("Exam Date and Time:", examDateTime);
     // Additional logic for form submission
+
+    // add course
+
+    // call the api
+
+    const accessToken = localStorage.getItem("accessToken")
+
+    const response = fetch("http://localhost:9090/term/" + semesterID + "/preregistration", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization" : "Bearer " + accessToken
+      },
+      body: JSON.stringify({
+        name: name,
+        professorName: professorName, 
+        termId: semesterID,
+        capacity: capacity,
+        classDateTime: classDateTime, 
+        examDateTime: examDateTime
+      })
+    }).then(response => response.json()).then(response => {
+      console.log("courses added !!")
+    }).catch(err => {
+      console.log(err)
+    })
+    
+
+
+
+
+
   };
 
   return (

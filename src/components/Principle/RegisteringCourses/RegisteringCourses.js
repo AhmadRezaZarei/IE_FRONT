@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
@@ -15,9 +15,56 @@ export default function RegisteringCourses() {
   const coursesPerPage = 6;
   const [currentPage, setCurrentPage] = useState(1);
   let { semesterID } = useParams();
-  const semester = allSemesters.find(
-    (semester) => semester.id === Number(semesterID)
-  );
+
+  const [semester, setSemester] = useState({name: "todo"})
+  const [currentCourses, setCurrentCourses] = useState([])
+
+
+  useEffect(() => {
+
+    const accessToken = localStorage.getItem("accessToken")
+
+    const response = fetch("http://localhost:9090/term/" + semesterID, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization" : "Bearer " + accessToken
+      },
+    }).then(response => response.json()).then(response => {
+      setSemester(response.term)
+    })
+
+  }, [semesterID])
+
+  useEffect(() => {
+    // ferch coursses
+
+
+    const accessToken = localStorage.getItem("accessToken")
+
+    const response = fetch("http://localhost:9090/term/" + semesterID + "/preregistration_courses", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization" : "Bearer " + accessToken
+      }
+    }).then(response => response.json()).then(response => {
+
+      const courses = response.registrationCourses
+            
+      for(let i = 0; i < courses.length; i++){
+        courses[i].students = []
+      }
+      console.log(courses)
+      setCurrentCourses(courses)
+    }).catch(err => {
+      console.log(err)
+    })
+    
+
+  }, [semesterID])
+
+
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
     // Reset the current page when the search query changes
@@ -43,21 +90,7 @@ export default function RegisteringCourses() {
     );
   }
 
-  if (sortByStudents === "most") {
-    filteredCourses = [...filteredCourses].sort(
-      (a, b) => b.students.length - a.students.length
-    );
-  } else if (sortByStudents === "least") {
-    filteredCourses = [...filteredCourses].sort(
-      (a, b) => a.students.length - b.students.length
-    );
-  }
-
-  const lastIndex = currentPage * coursesPerPage;
-  const firstIndex = lastIndex - coursesPerPage;
-  const currentCourses = showAllCourses
-    ? filteredCourses
-    : filteredCourses.slice(firstIndex, lastIndex);
+ 
   return (
     <div className="semester">
       <div className="header">
@@ -76,18 +109,6 @@ export default function RegisteringCourses() {
               onChange={handleSearchChange}
             />
             <div className="filterbtn-container">
-              <Button
-                variant="contained"
-                onClick={() => handleSortByStudents("most")}
-              >
-                Most Students
-              </Button>
-              <Button
-                variant="contained"
-                onClick={() => handleSortByStudents("least")}
-              >
-                Least Students
-              </Button>
             </div>
             <div>
                 <Button variant="contained"> Download Excel </Button>
@@ -111,19 +132,6 @@ export default function RegisteringCourses() {
             ))}
           </ul>
 
-          {filteredCourses.length > coursesPerPage && (
-            <div className="btn-container">
-              {!showAllCourses ? (
-                <Button className="show-more-btn" onClick={handleShowMore}>
-                  Show More
-                </Button>
-              ) : (
-                <Button className="show-less-btn" onClick={handleShowLess}>
-                  Show Less
-                </Button>
-              )}
-            </div>
-          )}
         </div>
       ) : (
         <h2>Semester not found.</h2>

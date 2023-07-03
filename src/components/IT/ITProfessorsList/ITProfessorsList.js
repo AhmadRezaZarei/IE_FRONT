@@ -9,7 +9,6 @@ import AddIcon from '@mui/icons-material/Add';
 export default function ITProfessorList() {
   
   const [showAll, setShowAll] = useState(false);
-  const [professors, setProfessors] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleShowMore = () => {
@@ -34,6 +33,7 @@ export default function ITProfessorList() {
     setProfessors(filteredProfessors);
   };
 
+  const [professors, setProfessors] = useState([]);
 
   useEffect(() => {
     

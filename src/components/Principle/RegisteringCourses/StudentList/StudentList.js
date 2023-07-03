@@ -7,12 +7,14 @@ import Card from '@mui/material/Card';
 
 export default function StudentList() {
     let { semesterID, courseID } = useParams();
+    
     const semester = allSemesters.find((semester) => semester.id === Number(semesterID));
-    const course = semester.courses.find(
-      (course) => course.id === Number(courseID)
-    );
+
+ 
+    const [course, setCourse] = useState({name: "course name 1", students: []})
+    const [students, setStudents] = useState([{id: "1", fullName: "reza", "status": "Pass"}])
     const [showAll, setShowAll] = useState(false);
-    const [students, setStudents] = useState(course.students.slice(0, 10));
+
     const [searchQuery, setSearchQuery] = useState("");
     const [sortByStudents, setSortByStudents] = useState(null);
   

@@ -14,21 +14,29 @@ import { Link } from "react-router-dom";
 import allSemesters from "../../../mockdata";
 
 export default function EditSemester() {
+  
   const students = [
     { id: 1, name: "John" },
     { id: 2, name: "Jane" },
     { id: 3, name: "Mike" },
   ];
 
-  const professors = [
-    { id: 1, name: "Dr. Smith" },
-    { id: 2, name: "Prof. Johnson" },
-    { id: 3, name: "Dr. Brown" },
-  ];
-  let { id } = useParams();
-  const semester = allSemesters.find((semester) => semester.id === Number(id));
+  // const professors = [
+  //   { id: 1, name: "Dr. Smith" },
+  //   { id: 2, name: "Prof. Johnson" },
+  //   { id: 3, name: "Dr. Brown" },
+  // ];
 
-  const [name, setName] = useState(semester.name);
+  const [professors, setProfessors] = useState([])
+  
+  let { id } = useParams();
+  // its semesterID
+
+  const [semester, setSemester] = useState({name: "name"})
+
+
+ // const [name, setName] = useState(semester.name);
+  const [name, setName] = useState("name");
   const [selectedStudent, setSelectedStudent] = useState("");
   const [selectedProfessor, setSelectedProfessor] = useState("");
   const handleNameChange = (event) => {
